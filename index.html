@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Camera Photo App</title>
+</head>
+<body>
+  <h2>Camera Photo App 📸</h2>
+
+  <button id="start">Camera Chalu Karo</button>
+  <br><br>
+
+  <video id="camera" autoplay playsinline width="300"></video>
+  <br><br>
+
+  <button id="capture">Photo Kheencho</button>
+  <br><br>
+
+  <canvas id="photo" width="300"></canvas>
+
+  <script>
+    const video = document.getElementById("camera");
+    const canvas = document.getElementById("photo");
+
+    document.getElementById("start").onclick = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "user" },
+          audio: false
+        });
+        video.srcObject = stream;
+      } catch (error) {
+        alert("Camera permission nahi mili.");
+      }
+    };
+
+    document.getElementById("capture").onclick = () => {
+      const context = canvas.getContext("2d");
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const link = document.createElement("a");
+      link.download = "photo.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    };
+  </script>
+</body>
+</html>
